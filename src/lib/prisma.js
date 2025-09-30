@@ -1,15 +1,20 @@
 import { PrismaClient } from '../generated/prisma/index.js';
 
-let prisma;
+const globalForPrisma = globalThis;
 
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
-} else {
-  // Prevent creating new instances during hot-reload in dev
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
-  }
-  prisma = global.prisma;
+const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query', 'error', 'warn'],
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
 }
 
 export default prisma;
+
+// import { PrismaClient } from '@prisma/client';
+
+// const prisma = new PrismaClient();
+// export default prisma;
