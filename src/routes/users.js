@@ -46,10 +46,54 @@ router.post('/signup',async(req, res)=>{
             Error:"Server error "
         })
     }
-    
-    // res.status(200).send("signup completed")
 
 
+})
+
+router.post('/login',async(req,res)=>{
+    const {email,  password}=req.body;
+
+    console.log( "email , pass", email, password);
+
+    try{
+        if(!email || !password){
+        res.status(300).json({
+            message:"Please enter credentials!"
+        })
+        return;
+    }
+
+    const user= await prisma.user.findUnique({
+        where:{email},
+    })
+
+    if(!user){
+        res.status(400).send("user not found");
+        return;
+    }
+
+    const isMatch=await bcrypt.compare(password, user.passwordHash);
+
+    if(!isMatch){
+        res.status(300).json({
+            message:"please enter correct password"
+        })
+        return;
+    }
+
+    res.status(201).json({
+        message:"logged in successfully!!",
+        user
+    })
+
+    }catch(error){
+        console.log("error during login -", error);
+
+        res.status(500).json({
+            message:"server error ",
+            error
+        })
+    }
 })
 
 export default router;
