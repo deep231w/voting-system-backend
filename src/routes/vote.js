@@ -41,7 +41,7 @@ router.post('/votesubmit',async(req,res)=>{
             message:"Vote submitted successfully",
             vote
         })
-        
+
     }catch(e){
         console.log("error during vote - ", e);
 
@@ -51,3 +51,5 @@ router.post('/votesubmit',async(req,res)=>{
         })
     }
 })
+
+export default router;
