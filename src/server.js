@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoute from './routes/users.js';
+import pollRoute from './routes/polls.js';
+import { authMiddleware } from './middleware.js';
 
 dotenv.config();
 
@@ -12,6 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/users', userRoute);
+app.use('/poll',authMiddleware,pollRoute);
+
 
 app.get('/', (req, res) => {
   res.send('Backend is running!');
