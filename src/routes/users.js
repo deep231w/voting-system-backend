@@ -39,13 +39,14 @@ router.post('/signup',async(req, res)=>{
         })
 
         const token= jwt.sign(
-            user,process.env.JWT_SECRET,{expiresIn:"1d"}
+            { id: newUser.id, email: newUser.email }
+            ,process.env.JWT_SECRET,{expiresIn:"1d"}
         )
 
 
         res.status(201).json({
             message:"User sign up successfully ",
-            user:newUser,
+            user:{name:newUser.name, id: newUser.id, email: newUser.email },
             token:token
         });
         
@@ -90,12 +91,13 @@ router.post('/login',async(req,res)=>{
     }
 
     const token= jwt.sign(
-        user,process.env.JWT_SECRET,{expiresIn:"1d"}
+        { id: user.id, email: user.email }
+        ,process.env.JWT_SECRET,{expiresIn:"1d"}
     )
 
     res.status(201).json({
         message:"logged in successfully!!",
-        user,
+        user:{name:user.name, id: user.id, email: user.email },
         token:token
     })
 
