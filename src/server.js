@@ -24,13 +24,10 @@ app.get('/', (req, res) => {
   res.send('Backend is running!');
 });
 
-// ---- Create HTTP server instead of app.listen ----
 const server = http.createServer(app);
 
-// ---- Setup WebSocket server ----
 const wss = new WebSocketServer({ server });
 
-// log connections
 wss.on("connection", (ws) => {
   console.log("Client connected ✅");
   ws.on("close", () => console.log("Client disconnected ❌"));
