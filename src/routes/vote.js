@@ -41,7 +41,6 @@ router.post('/votesubmit', async (req, res) => {
       }
     });
 
-    // ✅ fetch updated poll counts
     const poll = await prisma.poll.findUnique({
       where: { id: option.pollId },
       include: {
@@ -49,14 +48,12 @@ router.post('/votesubmit', async (req, res) => {
       }
     });
 
-    // prepare counts
     const optionCounts = poll.options.map(opt => ({
       optionId: opt.id,
       text: opt.text,
       count: opt.votes.length
     }));
 
-    // ✅ broadcast live update
     broadcast({
       type: "VOTE_UPDATE",
       pollId: poll.id,
