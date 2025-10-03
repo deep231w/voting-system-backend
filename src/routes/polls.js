@@ -48,4 +48,36 @@ router.post('/createpoll',async(req,res)=>{
     
 
 })
+
+router.get('/getpolls',async(req,res)=>{
+      try {
+    const polls = await prisma.poll.findMany({
+        include: {
+            creator: {
+            select: { id: true, name: true, email: true }
+            },
+            options: {
+            include: {
+                votes: true  
+            }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+        });
+
+
+    res.status(201).json({
+      message: "Polls fetched successfully",
+      polls
+    });
+  } catch (e) {
+    console.log("Error fetching polls - ", e);
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
+
+})
 export default router;
